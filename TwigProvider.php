@@ -13,12 +13,15 @@ namespace Tholcomb\Symple\Twig;
 use Pimple\Container;
 use Pimple\Exception\FrozenServiceException;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
+use Tholcomb\Symple\Console\ConsoleProvider;
 use Tholcomb\Symple\Core\AbstractProvider;
+use Tholcomb\Symple\Core\Cache\SympleCacheContainer;
 use Tholcomb\Symple\Core\Symple;
 use Tholcomb\Symple\Http\HttpProvider;
 use Tholcomb\Symple\Core\UnregisteredProviderException;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use function Tholcomb\Symple\Core\exists_and_registered;
 use function Tholcomb\Symple\Core\isset_and_true;
 
 class TwigProvider extends AbstractProvider {
@@ -54,6 +57,14 @@ class TwigProvider extends AbstractProvider {
 
 			return $loader;
 		};
+
+		if (exists_and_registered(ConsoleProvider::class, $c)) {
+			$c->extend(ConsoleProvider::KEY_CACHE_CONTAINER, function (SympleCacheContainer $caches, $c) {
+				$caches->addCache(new SympleTwigCache($c[self::KEY_ENVIRONMENT]));
+
+				return $caches;
+			});
+		}
 	}
 
 	public static function getEnvironment(Container $c): Environment
