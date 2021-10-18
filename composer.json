@@ -23,7 +23,7 @@
     },
     "require-dev": {
         "tholcomb/symple-http": "^1.0",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5 | ^9.5"
     },
     "suggest": {
         "tholcomb/symple-console": "For template cache management"
